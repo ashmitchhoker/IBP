@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Score</title>
+</head>
+<body>
+    <h1>Live Score</h1>
+    <div id="live-score">
+        <!-- This div will be updated with the most recent live score -->
+    </div>
+
+    <script>
+        // Function to fetch and display the most recent live score
+        function fetchLatestLiveScore() {
+            fetch('/api/live_score/latest') // API endpoint to fetch the latest live score
+                .then(response => response.json())
+                .then(data => {
+                    // Update the content on the webpage with the live score data
+                    const liveScoreDiv = document.getElementById('live-score');
+                    liveScoreDiv.innerHTML = `
+                        <p>Match ID: ${data.MatchID}</p>
+                        <p>Team ID: ${data.TeamID}</p>
+                        <p>Runs Scored: ${data.RunsScored}</p>
+                        <p>Wickets Taken: ${data.WicketsTaken}</p>
+                        <p>Overs Bowled: ${data.OversBowled}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching live score:', error);
+                });
+        }
+
+        // Fetch the most recent live score when the page loads
+        fetchLatestLiveScore();
+
+        // Optionally, you can periodically fetch the latest live score
+        setInterval(fetchLatestLiveScore, 1000); // Adjust the interval as needed
+    </script>
+</body>
+</html>

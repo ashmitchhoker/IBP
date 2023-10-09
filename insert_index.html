@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cricket Score Updates</title>
+</head>
+<body>
+  <h1>Cricket Score Updates</h1>
+  
+  <!-- Form for submitting cricket score updates -->
+  <form id="scoreForm">
+    <label for="matchID">Match ID:</label>
+    <input type="number" id="matchID" name="matchID" required>
+    <label for="teamID">Team ID:</label>
+    <input type="number" id="teamID" name="teamID" required>
+    <label for="runsScored">Runs Scored:</label>
+    <input type="number" id="runsScored" name="runsScored" required>
+    <label for="wicketsTaken">Wickets Taken:</label>
+    <input type="number" id="wicketsTaken" name="wicketsTaken" required>
+    <label for="oversBowled">Overs Bowled:</label>
+    <input type="number" step="0.1" id="oversBowled" name="oversBowled" required>
+    <button type="submit">Submit</button>
+  </form>
+  
+  <!-- Display real-time updates received from the server -->
+  <div id="updateDiv"></div>
+
+  <script>
+    const scoreForm = document.getElementById('scoreForm');
+    const updateDiv = document.getElementById('updateDiv');
+    const ws = new WebSocket('ws://localhost:8080'); // Replace with your WebSocket server URL
+
+    // Listen for form submission
+    scoreForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Get form input values
+      const matchID = document.getElementById('matchID').value;
+      const teamID = document.getElementById('teamID').value;
+      const runsScored = document.getElementById('runsScored').value;
+      const wicketsTaken = document.getElementById('wicketsTaken').value;
+      const oversBowled = document.getElementById('oversBowled').value;
+      
+      // Create a JSON object with the form data
+      const data = {
+        action: 'insertData',
+        MatchID: parseInt(matchID),
+        TeamID: parseInt(teamID),
+        RunsScored: parseInt(runsScored),
+        WicketsTaken: parseInt(wicketsTaken),
+        OversBowled: parseFloat(oversBowled),
+      };
+
+      // Send the JSON data to the server via WebSocket
+      ws.send(JSON.stringify(data));
+    });
+
+    // Listen for updates from the server
+    ws.onmessage = (event) => {
+      const message = event.data;
+      // Display the update message received from the server
+      updateDiv.innerHTML = `<p>${message}</p>`;
+    };
+  </script>
+</body>
+</html>
