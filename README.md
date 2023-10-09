@@ -25,6 +25,6 @@ Usage
 - This file listens for updates from the database.
 - Modify the code in `update.js` to connect to your database and listen for changes.
 
-2. update_index.html
+4. update_index.html
 
 - I have created an html webpage so that end consumer will get the updated score in database which will be the live score..
